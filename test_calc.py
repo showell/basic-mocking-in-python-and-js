@@ -1,13 +1,11 @@
-from contextlib import contextmanager
 import calc
 
 run_test = lambda f: f()
 
-@contextmanager
-def mocked_value(obj, attr, val):
+def with_mocked_value(obj, attr, val, f):
     old_val = getattr(obj, attr)
     setattr(obj, attr, val)
-    yield
+    f()
     setattr(obj, attr, old_val)
 
 @run_test
@@ -47,5 +45,10 @@ def test_actual_plot():
         nonlocal called
         called = True
 
-    with mocked_value(calc.simple_plotter, "plot", mock_plotter):
-        calc.plot([1, 2], calc.double) 
+    with_mocked_value(
+        calc.simple_plotter,
+        "plot",
+        mock_plotter,
+        lambda: calc.plot([1, 2], calc.double) ,
+    )
+    assert(called)

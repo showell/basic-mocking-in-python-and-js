@@ -25,10 +25,13 @@ function plot(x_vals, f) {
     plot_function_with_plotter(x_vals, f, plotter);
 }
 
+imports = {simple_plotter};
+
 module.exports = {
     double,
     triple,
     calculate, 
     plot_function_with_plotter,
     plot,
+    imports,
 };

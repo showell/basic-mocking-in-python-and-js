@@ -3,6 +3,13 @@ calc = require("./calc");
 
 function run_test(s, f) { f();}
 
+function with_mocked_value(obj, attr, val, f) {
+    old_val = obj[attr];
+    obj[attr] = val;
+    f();
+    obj[attr] = old_val;
+}
+
 run_test("double", () => {
     assert.equal(calc.double(1), 2);
     assert.equal(calc.double(2), 4);
@@ -45,7 +52,13 @@ run_test("actual plot", () => {
         called = true;
     }
 
-    calc.simple_plotter = mock_plotter;
-    calc.plot_function_with_plotter([1, 2], calc.double, mock_plotter)
+    with_mocked_value(
+        calc.imports.simple_plotter,
+        "plot",
+        mock_plotter,
+        () => { 
+            calc.plot([1, 2], calc.double);
+        },
+    );
     assert.equal(called, true)
 });

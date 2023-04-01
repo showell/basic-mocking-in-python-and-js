@@ -26,7 +26,7 @@ run_test("calculate", () => {
     );
 });
 
-run_test("abstract_plotter", () => {
+run_test("abstract plotter", () => {
     called = false;
     function mock_plotter(tups) {
         assert.deepEqual(tups, [[1, 6], [2, 12], [3, 18], [4, 24]]);
@@ -35,5 +35,17 @@ run_test("abstract_plotter", () => {
 
     f = (x) => calc.double(calc.triple(x));
     calc.plot_function_with_plotter([1, 2, 3, 4], f, mock_plotter)
+    assert.equal(called, true)
+});
+
+run_test("actual plot", () => {
+    called = false;
+    function mock_plotter(tups) {
+        assert.deepEqual(tups, [[1, 2], [2, 4]]);
+        called = true;
+    }
+
+    calc.simple_plotter = mock_plotter;
+    calc.plot_function_with_plotter([1, 2], calc.double, mock_plotter)
     assert.equal(called, true)
 });
